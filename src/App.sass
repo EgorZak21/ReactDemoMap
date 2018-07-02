@@ -1,0 +1,81 @@
+.App
+  margin-top: 10vh
+body
+  font-size: 25px
+.form
+  &-text
+    padding: 13px 50px 13px 13px
+    width: 100%
+    height: 60px
+    box-shadow: none
+    border:  #dddddd solid 3px
+    border-radius: 5px
+    &:focus
+      box-shadow: none
+      border:  #dddddd solid 3px
+      border-radius: 5px
+      outline: none
+  &-submit
+    display: none
+  &-label
+    &:hover
+      cursor: pointer
+    position: absolute
+    top: 4px
+    margin-bottom: 0
+    margin-top: 5px
+    margin-right: 12px
+    right: 5px
+    img
+      opacity: 0.9
+      height: 50px
+      width: 50px
+.message
+  text-align: center
+  width: 100%
+  padding: 6px
+  margin: 2% 0
+  border: #ffb7b7 solid 3px
+  color: #ff6b6d
+button, button:focus
+  background: none
+  color: inherit
+  border: none
+  padding: 0
+  font: inherit
+  cursor: pointer
+  outline: inherit
+.ListPoint
+  margin-top: 20px
+  margin-bottom: 5vh
+.point
+  background-color: rgba(255, 255, 255, 1)
+  padding: 13px 40px 13px 13px
+  width: 100%
+  min-height: 60px
+  margin-top: 10px
+  border:  #eeeeee solid 3px
+  position: relative
+  &-remove
+    img
+      width: 100%
+      height: 100%
+    position: absolute
+    top: 2px
+    right: 2px
+    width: 30px
+    height: 30px
+    opacity: 0.5
+    transition: all 0.2s
+    &:hover
+      right: 0
+      width: 34px
+      height: 34px
+      opacity: 0.8
+#map
+  width: 100%
+  height: 60vh
+h1
+  text-align: center
+  display: block
+  width: 100%
