@@ -14,7 +14,7 @@ class AddressInput extends Component{
   handleSubmit = event =>{
     if(this.state.value){
       this.setState({value:''});
-      this.props.onAdd(this.state.value);
+      this.props.onPointAdd(this.state.value);
     }else{
       this.props.onError();
     }

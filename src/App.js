@@ -1,72 +1,68 @@
 import React, { Component } from 'react';
-import './App.css';
 import AddressInput from './components/AddressInput';
 import Message from './components/Message';
 import ListPoint from './components/ListPoint';
 import {arrayMove} from 'react-sortable-hoc';
-import Maps from './components/Maps';
+import maps from './maps/Map'
+import Placemark from './maps/Placemark'
+import polyline from './maps/Polyline'
+import './App.css';
 
 class App extends Component {
   constructor(props){
     super(props);
     this.state = {
       message: '',
-      points: [],
-      toAdd: []
+      points: []
     };
+    this.ymaps = maps('yamaps').catch(() => {
+      this.setState(prev =>{
+        prev.message = 'Не удалось загрузить карту';
+        return(prev);
+      });
+    });
+    this.line = null;
   }
 
-  addPoint = adress => {
-    this.setState(prev => {
-      prev.toAdd.push(adress);
-      return(prev);
-    });
-  };
+  redrawPolyline = () =>
+    this.ymaps.then(
+      ymaps => this.line = polyline(ymaps,this.state.points,this.line)
+    );
 
-  removePoint = index => {
-    this.setState(prev => {
-      prev.points =  prev.points.filter((point,i)=>{
-        if(i===index) point.remove();
-        return(i!==index);
+  handlePointAdd = name =>
+    this.ymaps.then(ymaps => {
+      this.setState(prev => {
+        prev.points.push(new Placemark(ymaps,name,this.redrawPolyline));
+        return(prev);
       });
+    });
+
+  handlePointRemove = index =>
+    this.setState(prev => {
+      prev.points.splice(index,1)[0].remove();
       return(prev);
     });
-  };
 
   handleError = () =>{
     this.setState(prev =>{
       prev.message = 'Вы ввели пустое название';
       return(prev);
     });
-    setTimeout(()=>{
-      this.setState(prev=>{
+    setTimeout(()=>
+      this.setState(prev=> {
         prev.message = '';
         return(prev);
-      });
-    },3000)
+      }),3000)
   };
 
-  onDragEnd = ({oldIndex, newIndex})=>{
+  handleDragEnd = ({oldIndex, newIndex})=>
     this.setState(prev => {
-      prev.points = arrayMove(this.state.points, oldIndex, newIndex)
+      prev.points = arrayMove(this.state.points, oldIndex, newIndex);
       return prev;
     });
-  };
-
-  onNewMapPoint = (point)=>{
-    this.setState(prev => {
-      prev.points.push(point);
-      return(prev);
-    });
-  };
-
-  onMove = () =>{
-    this.setState(props =>{
-      return props;
-    });
-  };
 
   render() {
+    this.redrawPolyline();
     return (
       <div className="container App">
         <div className="row">
@@ -74,15 +70,14 @@ class App extends Component {
             <h1>React App</h1>
           </div>
         </div>
-        <div className="row">
+        <div className="row main">
           <div className="col-md-6 col-12">
-            <AddressInput onAdd = {this.addPoint} onError = {this.handleError}/>
+            <AddressInput onPointAdd = {this.handlePointAdd} onError = {this.handleError}/>
             <Message message={this.state.message}/>
-            <ListPoint points = {this.state.points} remove = {this.removePoint} onSortEnd={this.onDragEnd}/>
+            <ListPoint points = {this.state.points} onRemove = {this.handlePointRemove} onSortEnd={this.handleDragEnd}/>
           </div>
           <div className="col-md-6 col-12 ">
-            <div id="map">
-              <Maps toAdd = {this.state.toAdd} onNewMapPoint = {this.onNewMapPoint} points = {this.state.points} onMove = {this.onMove}/>
+            <div id="yamaps">
             </div>
           </div>
         </div>
